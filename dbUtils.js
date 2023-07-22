@@ -16,6 +16,16 @@ const readDataFromFile = () => {
   }
 };
 
+// Function to write and save the JSON data to db.json
+const writeDataToFile = (data) => {
+  try {
+    fs.writeFileSync(dbFilePath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (error) {
+    throw new Error('Unable to write data to the file.');
+  }
+};
+
 module.exports = {
   readDataFromFile,
+  writeDataToFile,
 };

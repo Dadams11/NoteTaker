@@ -3,17 +3,23 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const dbUtils = require('./dbUtils'); // Import the utility function for reading and parsing data
+const dbUtils = require('./dbUtils');
 
+// Middleware to parse JSON data
 app.use(express.json());
 
-// Route to handle a GET request for retrieving all saved notes
+// Route to handle the GET request for the root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the Note Taker application!');
+});
+
+// Route to handle the GET request for retrieving all saved notes
 app.get('/api/notes', (req, res) => {
   const notes = dbUtils.readDataFromFile();
   res.json(notes);
 });
 
-// Route to handle a POST request for saving a new note
+// Route to handle the POST request for saving a new note
 app.post('/api/notes', (req, res) => {
   const newNote = req.body;
 
@@ -27,12 +33,12 @@ app.post('/api/notes', (req, res) => {
   notes.push(newNote);
 
   // Write the updated notes array back to the file
-  fs.writeFileSync(dbFilePath, JSON.stringify(notes, null, 2), 'utf8');
+  dbUtils.writeDataToFile(notes);
 
   res.json(newNote);
 });
 
-// Route to handle a DELETE request for deleting a note by its ID
+// Route to handle the DELETE request for deleting a note by its ID
 app.delete('/api/notes/:id', (req, res) => {
   const noteId = req.params.id;
 
@@ -47,7 +53,7 @@ app.delete('/api/notes/:id', (req, res) => {
     const deletedNote = notes.splice(noteIndex, 1)[0];
 
     // Write the updated notes array back to the file
-    fs.writeFileSync(dbFilePath, JSON.stringify(notes, null, 2), 'utf8');
+    dbUtils.writeDataToFile(notes);
 
     res.json(deletedNote);
   } else {
@@ -55,6 +61,7 @@ app.delete('/api/notes/:id', (req, res) => {
   }
 });
 
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
