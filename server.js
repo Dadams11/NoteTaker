@@ -13,19 +13,19 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route to handle the GET request for retrieving all saved notes
-app.get('/api/notes', (req, res) => {
+app.get('/notes', (req, res) => {
   const notes = dbUtils.readDataFromFile();
   res.json(notes);
 });
 
 // Route to handle the POST request for saving a new note
 app.post('/api/notes', (req, res) => {
-  // ... (same as before)
+  // ... (code to save a new note to db.json and respond with the saved note) ...
 });
 
 // Route to handle the DELETE request for deleting a note by its ID
 app.delete('/api/notes/:id', (req, res) => {
-  // ... (same as before)
+  // ... (code to delete a note by ID from db.json and respond with the updated list of notes) ...
 });
 
 // Start the server
