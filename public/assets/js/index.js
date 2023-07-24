@@ -1,47 +1,48 @@
-// Function to fetch the notes from the server
-const fetchNotes = async () => {
+// Function to save a new note to the server
+const saveNote = async (note) => {
   try {
-    const response = await fetch('/notes');
-    const notes = await response.json();
-    return notes;
-  } catch (error) {
-    console.error('Error fetching notes:', error);
-    return [];
-  }
-};
-
-// Function to render the list of note titles in the left-hand column
-const renderNoteList = async () => {
-  const notes = await fetchNotes();
-  const noteListContainer = document.querySelector('.list-group');
-  noteListContainer.innerHTML = ''; // Clear existing list
-
-  if (notes.length === 0) {
-    const noNotesItem = document.createElement('li');
-    noNotesItem.textContent = 'No saved Notes';
-    noNotesItem.classList.add('list-group-item');
-    noteListContainer.appendChild(noNotesItem);
-  } else {
-    notes.forEach((note) => {
-      const listItem = document.createElement('li');
-      listItem.textContent = note.title;
-      listItem.classList.add('list-group-item');
-      listItem.dataset.note = JSON.stringify(note);
-      listItem.addEventListener('click', handleNoteView);
-      noteListContainer.appendChild(listItem);
+    const response = await fetch('/api/notes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(note),
     });
+
+    if (!response.ok) {
+      throw new Error('Failed to save note.');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error saving note:', error);
+    return null;
   }
 };
 
-// Sets the activeNote and displays it
-const handleNoteView = (e) => {
+// Function to handle the click on the "Save" button
+const handleSaveNote = async (e) => {
   e.preventDefault();
-  const note = JSON.parse(e.target.dataset.note);
-  activeNote = note;
-  renderActiveNote();
+  const title = document.querySelector('.note-title').value;
+  const text = document.querySelector('.note-textarea').value;
+
+  if (!title || !text) {
+    alert('Please enter a title and text for the note.');
+    return;
+  }
+
+  const newNote = { title, text };
+  const savedNote = await saveNote(newNote);
+
+  if (savedNote) {
+    activeNote = savedNote;
+    renderNoteList();
+    renderActiveNote();
+  } else {
+    alert('Failed to save the note. Please try again.');
+  }
 };
 
-// ... (existing code for handling other functions) ...
-
-// Call the renderNoteList function to display notes when the page loads
-renderNoteList();
+// Add event listener to the "Save" icon
+const saveNoteIcon = document.querySelector('.save-note');
+saveNoteIcon.addEventListener('click', handleSaveNote);
