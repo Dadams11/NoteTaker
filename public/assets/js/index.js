@@ -55,12 +55,26 @@ const saveNote = async (note) => {
   }
 };
 
-// Function to handle the view of a specific note
-const handleNoteView = (e) => {
-  e.preventDefault();
-  const note = JSON.parse(e.target.dataset.note);
-  activeNote = note;
-  renderActiveNote();
+// Function to handle the click event for a note in the list
+const handleNoteView = (event) => {
+  event.preventDefault();
+  const note = JSON.parse(event.target.dataset.note);
+  activeNote = note; // Set the activeNote variable to the clicked note
+  renderActiveNote(); // Display the clicked note in the right-hand column
+};
+
+// Function to render the currently active note in the right-hand column
+const renderActiveNote = () => {
+  const titleInput = document.querySelector('.note-title');
+  const textArea = document.querySelector('.note-textarea');
+
+  if (activeNote) {
+    titleInput.value = activeNote.title;
+    textArea.value = activeNote.text;
+  } else {
+    titleInput.value = '';
+    textArea.value = '';
+  }
 };
 
 // Event listener for the "Save Note" icon
@@ -71,9 +85,9 @@ document.querySelector('.save-note').addEventListener('click', async () => {
 
   try {
     const savedNote = await saveNote(newNote);
-    await renderNoteList(); // Refresh the note list after saving
     activeNote = savedNote;
     renderActiveNote();
+    await renderNoteList(); // Refresh the note list after saving
   } catch (error) {
     alert(error.message);
   }
