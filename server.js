@@ -3,6 +3,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const dbUtils = require('./dbUtils');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid'); // Import the uuid package and alias v4 as uuidv4
 
 // Middleware to parse JSON data
 app.use(express.json());
@@ -20,7 +21,7 @@ app.get('/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
   try {
     const newNote = req.body;
-    newNote.id = generateUniqueId(); // Generate a unique ID for the new note
+    newNote.id = uuidv4(); // Generate a unique ID for the new note using uuidv4
     const notes = dbUtils.readDataFromFile();
     notes.push(newNote);
     dbUtils.writeDataToFile(notes);
@@ -49,11 +50,3 @@ app.delete('/api/notes/:id', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-// Function to generate a unique ID for a new note
-function generateUniqueId() {
-  // A simple implementation using timestamp and random number
-  const timestamp = Date.now().toString(36);
-  const randomString = Math.random().toString(36).substring(2, 7);
-  return timestamp + randomString;
-}
