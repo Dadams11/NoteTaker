@@ -4,6 +4,6 @@ This project uses nodejs and express.js to locally host a browser-based note tak
 link to watch add notes: https://drive.google.com/file/d/15Pk2wWf1KiYKHE4td749ez7tD97ZT-Sc/view
 
 Links: 
-Deloyed on Heroku https://notetaker325-4917f7f6a9e0.herokuapp.com/ 
+Deloyed on Heroku: https://notetaker325-4917f7f6a9e0.herokuapp.com/ 
 
 Github Repo link: https://github.com/Dadams11/NoteTaker
