@@ -20,8 +20,8 @@ app.get('/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
   try {
     const newNote = req.body;
-    newNote.id = generateUniqueId(); // Generate a unique ID for the new note
     const notes = dbUtils.readDataFromFile();
+    newNote.id = generateUniqueId(); // Generate a unique ID for the new note
     notes.push(newNote);
     dbUtils.writeDataToFile(notes);
     res.json(newNote);

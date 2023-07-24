@@ -36,9 +36,6 @@ const renderNoteList = async () => {
 // Function to save a new note to the server
 const saveNote = async (note) => {
   try {
-    // Generate a unique ID for the new note on the client-side
-    note.id = generateUniqueId();
-    
     const response = await fetch('/api/notes', {
       method: 'POST',
       headers: {
@@ -57,11 +54,6 @@ const saveNote = async (note) => {
     throw error;
   }
 };
-
-// Function to generate a unique ID for a new note on the client-side
-function generateUniqueId() {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-}
 
 // ... (other existing functions, if any) ...
 
