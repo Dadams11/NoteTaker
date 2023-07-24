@@ -1,7 +1,9 @@
 // Function to fetch the notes from the server
 const fetchNotes = async () => {
   try {
-    const response = await fetch('/notes');
+    // Add a timestamp to the URL to bypass the cache
+    const timestamp = new Date().getTime();
+    const response = await fetch(`/notes?timestamp=${timestamp}`);
     const notes = await response.json();
     return notes;
   } catch (error) {
