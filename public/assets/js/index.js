@@ -55,8 +55,6 @@ const saveNote = async (note) => {
   }
 };
 
-// ... (existing code for handling other functions) ...
-
 // Event listener for the "Save Note" icon
 document.querySelector('.save-note').addEventListener('click', async () => {
   const title = document.querySelector('.note-title').value;
