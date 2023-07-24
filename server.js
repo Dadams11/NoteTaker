@@ -20,12 +20,7 @@ app.get('/notes', (req, res) => {
 app.post('/api/notes', (req, res) => {
   try {
     const newNote = req.body;
-    
-    // Generate a unique ID for the new note if the client hasn't sent one
-    if (!newNote.id) {
-      newNote.id = generateUniqueId();
-    }
-
+    newNote.id = generateUniqueId(); // Generate a unique ID for the new note
     const notes = dbUtils.readDataFromFile();
     notes.push(newNote);
     dbUtils.writeDataToFile(notes);
@@ -55,7 +50,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Function to generate a unique ID for a new note on the server-side
+// Function to generate a unique ID for a new note
 function generateUniqueId() {
   // A simple implementation using timestamp and random number
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
