@@ -11,27 +11,47 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route to handle the GET request for retrieving all saved notes
-app.get('/api/notes', (req, res) => {
+app.get('/notes', (req, res) => {
   const notes = dbUtils.readDataFromFile();
   res.json(notes);
 });
 
 // Route to handle the POST request for saving a new note
 app.post('/api/notes', (req, res) => {
-  // ... (code to save a new note to db.json and respond with the saved note) ...
+  try {
+    const newNote = req.body;
+    newNote.id = generateUniqueId(); // Generate a unique ID for the new note
+    const notes = dbUtils.readDataFromFile();
+    notes.push(newNote);
+    dbUtils.writeDataToFile(notes);
+    res.json(newNote);
+  } catch (error) {
+    console.error('Error saving note:', error);
+    res.status(500).json({ error: 'Failed to save the note. Please try again.' });
+  }
 });
 
 // Route to handle the DELETE request for deleting a note by its ID
 app.delete('/api/notes/:id', (req, res) => {
-  // ... (code to delete a note by ID from db.json and respond with the updated list of notes) ...
-});
-
-// Catch-all route to serve the 'notes.html' file for any other route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'notes.html'));
+  try {
+    const noteId = req.params.id;
+    const notes = dbUtils.readDataFromFile();
+    const updatedNotes = notes.filter((note) => note.id !== noteId);
+    dbUtils.writeDataToFile(updatedNotes);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting note:', error);
+    res.status(500).json({ error: 'Failed to delete the note. Please try again.' });
+  }
 });
 
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// Function to generate a unique ID for a new note
+function generateUniqueId() {
+  // A simple implementation using timestamp and random number
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+}
