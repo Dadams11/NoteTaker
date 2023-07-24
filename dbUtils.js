@@ -1,27 +1,26 @@
-// dbUtils.js
-
 const fs = require('fs');
 const path = require('path');
 
-const dbFilePath = path.resolve(__dirname, 'db.json');
+const dbFilePath = path.join(__dirname, 'db.json');
 
-// Function to read and parse the JSON data from db.json
+// Function to read data from the db.json file
 const readDataFromFile = () => {
   try {
     const data = fs.readFileSync(dbFilePath, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    // If the file does not exist or is empty, return an empty array
+    console.error('Error reading data from file:', error);
     return [];
   }
 };
 
-// Function to write and save the JSON data to db.json
+// Function to write data to the db.json file
 const writeDataToFile = (data) => {
   try {
-    fs.writeFileSync(dbFilePath, JSON.stringify(data, null, 2), 'utf8');
+    const jsonData = JSON.stringify(data, null, 2);
+    fs.writeFileSync(dbFilePath, jsonData, 'utf8');
   } catch (error) {
-    throw new Error('Unable to write data to the file.');
+    console.error('Error writing data to file:', error);
   }
 };
 
