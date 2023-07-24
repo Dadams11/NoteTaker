@@ -1,7 +1,7 @@
 // Function to fetch the notes from the server
 const fetchNotes = async () => {
   try {
-    const response = await fetch('/api/notes'); // Updated endpoint to match the server route
+    const response = await fetch('/notes');
     const notes = await response.json();
     return notes;
   } catch (error) {
@@ -54,6 +54,16 @@ const saveNote = async (note) => {
     throw error;
   }
 };
+
+// Function to handle the view of a specific note
+const handleNoteView = (e) => {
+  e.preventDefault();
+  const note = JSON.parse(e.target.dataset.note);
+  activeNote = note;
+  renderActiveNote();
+};
+
+// ... (other existing functions, if any) ...
 
 // Event listener for the "Save Note" icon
 document.querySelector('.save-note').addEventListener('click', async () => {
